@@ -39,6 +39,17 @@ if ! type -p shell_is_login ; then
   shell_is_script      () { ! shell_is_interactive ; }
 fi
 
+[ -z "$BASH_ENV" ] && export BASH_ENV="$BASH_SOURCE"
+
+# Now dispatch special files
+[ -f "${HOME}/.bashrc_all" ]                                 && . "${HOME}/.bashrc_all"
+[ -f "${HOME}/.bashrc_script" ]      && shell_is_script      && . "${HOME}/.bashrc_script"
+[ -f "${HOME}/.bashrc_interactive" ] && shell_is_interactive && . "${HOME}/.bashrc_interactive"
+[ -f "${HOME}/.bashrc_login" ]       && shell_is_login       && . "${HOME}/.bashrc_login"
+
+
+# Export or unset functions and shell variables
+
 if $EXPORT_FUNCTIONS ; then
   fn_cmd='export'
 else
@@ -52,15 +63,9 @@ $fn_cmd -f shell_is_login
 $fn_cmd -f shell_is_interactive
 $fn_cmd -f shell_is_script
 
-unset EXPORT_FUNCTIONS
+# Unset local variables
+
 unset fn_cmd
 
-[ -z "$BASH_ENV" ] && export BASH_ENV="$BASH_SOURCE"
-
-# Now dispatch special files
-[ -f "${HOME}/.bashrc_all" ]                                 && . "${HOME}/.bashrc_all"
-[ -f "${HOME}/.bashrc_script" ]      && shell_is_script      && . "${HOME}/.bashrc_script"
-[ -f "${HOME}/.bashrc_interactive" ] && shell_is_interactive && . "${HOME}/.bashrc_interactive"
-[ -f "${HOME}/.bashrc_login" ]       && shell_is_login       && . "${HOME}/.bashrc_login"
-
+unset EXPORT_FUNCTIONS
 unset BASHRC_DISPATCH_PID
