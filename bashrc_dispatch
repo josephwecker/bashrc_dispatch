@@ -47,6 +47,17 @@ fi
 [ -z "$BASH_ENV" ] && export BASH_ENV="$BASH_SOURCE"
 
 
+# Make these available to the potentially convoluted bashrc_* startup scripts
+
+if $EXPORT_FUNCTIONS ; then
+    export SHELL_PLATFORM
+    export -f shell_is_linux
+    export -f shell_is_osx
+    export -f shell_is_login
+    export -f shell_is_interactive
+    export -f shell_is_script
+fi
+
 # Now dispatch special files
 PRF="${HOME}/."
 
@@ -57,20 +68,16 @@ PRF="${HOME}/."
 [ -f "${PRF}bashrc_login" ]       && shell_is_login         && . "${PRF}bashrc_login"
 
 
-# Export or unset functions and shell variables
+# Unset variables if necessary to avoid env polution
 
-if $EXPORT_FUNCTIONS ; then
-  fn_cmd='export'
-else
-  fn_cmd='unset'
+if ! $EXPORT_FUNCTIONS ; then
+    unset SHELL_PLATFORM
+    unset -f shell_is_linux
+    unset -f shell_is_osx
+    unset -f shell_is_login
+    unset -f shell_is_interactive
+    unset -f shell_is_script
 fi
-
-$fn_cmd SHELL_PLATFORM
-$fn_cmd -f shell_is_linux
-$fn_cmd -f shell_is_osx
-$fn_cmd -f shell_is_login
-$fn_cmd -f shell_is_interactive
-$fn_cmd -f shell_is_script
 
 
 # Unset local variables
