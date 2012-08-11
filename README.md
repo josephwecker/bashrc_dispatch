@@ -75,10 +75,10 @@ Development
 -----------
 
 Code
-: <https://github.com/gioele/bashrc_dispatch>
+: <https://github.com/josephwecker/bashrc_dispatch>
 
 Report issues
-: <https://github.com/gioele/bashrc_dispatch/issues>
+: <https://github.com/josephwecker/bashrc_dispatch/issues>
 
 
 License
