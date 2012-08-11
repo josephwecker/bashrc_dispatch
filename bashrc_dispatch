@@ -1,49 +1,11 @@
 #!/bin/bash
+
+# Launch different bash configuration for Linux vs OSX, interactive vs batch
+#
+# More info at https://github.com/gioele/bashrc_dispatch
+#
 # License: Public Domain.
 # Author:  Joseph Wecker, 2012
-#
-# Are you tired of trying to remember what .bashrc does vs .bash_profile vs .profile?
-# Are you tired of trying to remember how darwin/mac-osx treat them differently from linux?
-# Are you tired of not having your ~/.bash* stuff work the way you expect?
-#
-# Symlink all of the following to this file:
-#   *  ~/.bashrc
-#   *  ~/.bash_profile
-#   *  ~/.profile
-#   *  ~/.bash_login
-#
-# And then you can use these instead:
-#   *  ~/.bashrc_all             sourced on every bash instantiation
-#   *    ~/.bashrc_script        sourced only when non-interactive
-#   *    ~/.bashrc_interactive   the one you'll probably fill up (MUTALLY EXCLUSIVE w/ .bashrc_script)
-#   *      ~/.bashrc_login       sourced only when an interactive is also a login
-#
-# To reiterate, `.bashrc_all` will always be run first.
-# Then either `.bashrc_script` OR `.bashrc_interactive` will be run next
-# depending on whether or not the bash invocation is... interactive.
-# Finally, sometimes, like when you first ssh into a machine or often when
-# opening a new terminal window on a mac, the `.bashrc_login` will be run
-# after the `.bash_interactive`. So `.bashrc_login` is the one where you'd echo
-# a banner or whatever.
-#
-#
-# In addition to the dispatching, you'll see below that you'll forever have the
-# following available:
-#  * $SHELL_PLATFORM   # (at the moment just 'LINUX', 'OSX', or 'OTHER')
-#  * shell_is_linux
-#  * shell_is_osx
-#  * shell_is_interactive
-#  * shell_is_script
-#
-# The functions are meant for clean conditionals in your new .bashrc_* scripts-
-# like:
-#     $  shell_is_linux && echo 'leenux!'
-# or something like:
-#     $  if shell_is_interactive; then echo 'interact'; fi
-# etc... And now I think these comments have reached parity with the code
-# itself which should be easy to extend.
-#
-#
 
 # Configuration
 # -------------
