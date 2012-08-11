@@ -9,11 +9,15 @@
 
 # Configuration
 # -------------
-
+#
 # EXPORT_FUNCTIONS: export SHELL_PLATFORM and shell_is_* functions for use
 #                   in other scripts.
 
 EXPORT_FUNCTIONS=true
+
+
+# Code
+# ----
 
 # Avoid recursive invocation
 [ -n "$BASHRC_DISPATCH_PID" ] && [ $$ -eq "$BASHRC_DISPATCH_PID" ] && exit
