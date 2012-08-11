@@ -49,10 +49,11 @@
 SHELL_FOR=$$
 
 export SHELL_PLATFORM='OTHER'
-unamestr=`uname`
-if   [[ "$unamestr" == 'Linux'  ]]; then SHELL_PLATFORM='LINUX';
-elif [[ "$unamestr" == 'Darwin' ]]; then SHELL_PLATFORM='OSX';
-fi
+case "$MACHTYPE" in
+  *'linux'*   ) SHELL_PLATFORM='LINUX' ;;
+  *'darwin'*  ) SHELL_PLATFORM='OSX' ;;
+  *'freebsd'* ) SHELL_PLATFORM='BSD' ;;
+esac
 
 if [ -z "$SHELL_DISPATCH_FUNCTIONS" ]; then
   shell_is_linux       () { return `[[ "$SHELL_PLATFORM" == 'LINUX' ]]`; }
