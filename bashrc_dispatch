@@ -1,0 +1,77 @@
+#!/bin/bash
+# License: Public Domain.
+# Author:  Joseph Wecker, 2012
+#
+# Are you tired of trying to remember what .bashrc does vs .bash_profile vs .profile?
+# Are you tired of trying to remember how darwin/mac-osx treat them differently from linux?
+# Are you tired of not having your ~/.bash* stuff work the way you expect?
+#
+# Symlink all of the following to this file:
+#   *  ~/.bashrc
+#   *  ~/.bash_profile
+#   *  ~/.profile
+#   *  ~/.bash_login
+#
+# And then you can use these instead:
+#   *  ~/.bashrc_all             sourced on every bash instantiation
+#   *    ~/.bashrc_script        sourced only when non-interactive
+#   *    ~/.bashrc_interactive   the one you'll probably fill up (MUTALLY EXCLUSIVE w/ .bashrc_script)
+#   *      ~/.bashrc_login       sourced only when an interactive is also a login
+#
+# To reiterate, `.bashrc_all` will always be run first.
+# Then either `.bashrc_script` OR `.bashrc_interactive` will be run next
+# depending on whether or not the bash invocation is... interactive.
+# Finally, sometimes, like when you first ssh into a machine or often when
+# opening a new terminal window on a mac, the `.bashrc_login` will be run
+# after the `.bash_interactive`. So `.bashrc_login` is the one where you'd echo
+# a banner or whatever.
+#
+#
+# In addition to the dispatching, you'll see below that you'll forever have the
+# following available:
+#  * $SHELL_PLATFORM   # (at the moment just 'LINUX', 'OSX', or 'OTHER')
+#  * shell_is_linux
+#  * shell_is_osx
+#  * shell_is_interactive
+#  * shell_is_script
+#
+# The functions are meant for clean conditionals in your new .bashrc_* scripts-
+# like:
+#     $  shell_is_linux && echo 'leenux!'
+# or something like:
+#     $  if shell_is_interactive; then echo 'interact'; fi
+# etc... And now I think these comments have reached parity with the code
+# itself which should be easy to extend.
+#
+#
+
+[ -n "$SHELL_FOR" ] && [ $$ -eq "$SHELL_FOR" ] && exit  # Avoid recursive invocation
+SHELL_FOR=$$
+
+export SHELL_PLATFORM='OTHER'
+unamestr=`uname`
+if   [[ "$unamestr" == 'Linux'  ]]; then SHELL_PLATFORM='LINUX';
+elif [[ "$unamestr" == 'Darwin' ]]; then SHELL_PLATFORM='OSX';
+fi
+
+if [ -z "$SHELL_DISPATCH_FUNCTIONS" ]; then
+  shell_is_linux       () { return `[[ "$SHELL_PLATFORM" == 'LINUX' ]]`; }
+  shell_is_osx         () { return `[[ "$SHELL_PLATFORM" == 'OSX'   ]]`; }
+  shell_is_login       () { return `shopt -q login_shell`;               }
+  shell_is_interactive () { return `[ -n "$PS1" ]`;                      }
+  shell_is_script      () { return `! shell_is_interactive`;             }
+  export -f shell_is_linux
+  export -f shell_is_osx
+  export -f shell_is_login
+  export -f shell_is_interactive
+  export -f shell_is_script
+  export SHELL_DISPATCH_FUNCTIONS=1
+fi
+
+[ -z "$BASH_ENV" ] && export BASH_ENV="$BASH_SOURCE"
+
+# Now dispatch special files
+[ -f "${HOME}/.bashrc_all" ]                                 && source "${HOME}/.bashrc_all"
+[ -f "${HOME}/.bashrc_script" ]      && shell_is_script      && source "${HOME}/.bashrc_script"
+[ -f "${HOME}/.bashrc_interactive" ] && shell_is_interactive && source "${HOME}/.bashrc_interactive"
+[ -f "${HOME}/.bashrc_login" ]       && shell_is_login       && source "${HOME}/.bashrc_login"
