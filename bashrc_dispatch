@@ -56,11 +56,11 @@ case "$MACHTYPE" in
 esac
 
 if [ -z "$SHELL_DISPATCH_FUNCTIONS" ]; then
-  shell_is_linux       () { return `[[ "$SHELL_PLATFORM" == 'LINUX' ]]`; }
-  shell_is_osx         () { return `[[ "$SHELL_PLATFORM" == 'OSX'   ]]`; }
-  shell_is_login       () { return `shopt -q login_shell`;               }
-  shell_is_interactive () { return `[ -n "$PS1" ]`;                      }
-  shell_is_script      () { return `! shell_is_interactive`;             }
+  shell_is_linux       () { test "$SHELL_PLATFORM" = 'LINUX' ; }
+  shell_is_osx         () { test "$SHELL_PLATFORM" = 'OSX' ; }
+  shell_is_login       () { shopt -q login_shell ; }
+  shell_is_interactive () { test -n "$PS1" ; }
+  shell_is_script      () { ! shell_is_interactive ; }
   export -f shell_is_linux
   export -f shell_is_osx
   export -f shell_is_login
