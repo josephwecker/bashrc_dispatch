@@ -25,15 +25,15 @@ BASHRC_DISPATCH_PID=$$
 
 
 SHELL_PLATFORM='OTHER'
-case "$MACHTYPE" in
+case "$OSTYPE" in
   *'linux'*   ) SHELL_PLATFORM='LINUX' ;;
   *'darwin'*  ) SHELL_PLATFORM='OSX' ;;
   *'freebsd'* ) SHELL_PLATFORM='BSD' ;;
 esac
 
 if ! type -p shell_is_login ; then
-  shell_is_linux       () { [[ "$MACHTYPE" == *'linux'* ]] ; }
-  shell_is_osx         () { [[ "$MACHTYPE" == *'darwin'* ]] ; }
+  shell_is_linux       () { [[ "$OSTYPE" == *'linux'* ]] ; }
+  shell_is_osx         () { [[ "$OSTYPE" == *'darwin'* ]] ; }
   shell_is_login       () { shopt -q login_shell ; }
   shell_is_interactive () { test -n "$PS1" ; }
   shell_is_script      () { ! shell_is_interactive ; }
