@@ -55,7 +55,7 @@ case "$MACHTYPE" in
   *'freebsd'* ) SHELL_PLATFORM='BSD' ;;
 esac
 
-if [ -z "$SHELL_DISPATCH_FUNCTIONS" ]; then
+if [ -z "$SHELL_DISPATCH_FUNCTIONS" ] ; then
   shell_is_linux       () { test "$SHELL_PLATFORM" = 'LINUX' ; }
   shell_is_osx         () { test "$SHELL_PLATFORM" = 'OSX' ; }
   shell_is_login       () { shopt -q login_shell ; }
@@ -72,7 +72,7 @@ fi
 [ -z "$BASH_ENV" ] && export BASH_ENV="$BASH_SOURCE"
 
 # Now dispatch special files
-[ -f "${HOME}/.bashrc_all" ]                                 && source "${HOME}/.bashrc_all"
-[ -f "${HOME}/.bashrc_script" ]      && shell_is_script      && source "${HOME}/.bashrc_script"
-[ -f "${HOME}/.bashrc_interactive" ] && shell_is_interactive && source "${HOME}/.bashrc_interactive"
-[ -f "${HOME}/.bashrc_login" ]       && shell_is_login       && source "${HOME}/.bashrc_login"
+[ -f "${HOME}/.bashrc_all" ]                                 && . "${HOME}/.bashrc_all"
+[ -f "${HOME}/.bashrc_script" ]      && shell_is_script      && . "${HOME}/.bashrc_script"
+[ -f "${HOME}/.bashrc_interactive" ] && shell_is_interactive && . "${HOME}/.bashrc_interactive"
+[ -f "${HOME}/.bashrc_login" ]       && shell_is_login       && . "${HOME}/.bashrc_login"
