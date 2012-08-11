@@ -1,5 +1,9 @@
-bashrc_dispatch: Different bash configurations for Linux vs OSX, interactive vs batch
-=====================================================================================
+bashrc\_dispatch
+=================
+
+**Different bash configurations for Linux vs OSX, interactive vs batch**
+
+(For related discussion see [hackernews](http://news.ycombinator.com/item?id=4369485))
 
 Are you tired of trying to remember what `.bashrc` does vs `.bash_profile`
 vs `.profile`?
