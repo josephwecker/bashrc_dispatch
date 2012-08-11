@@ -15,8 +15,10 @@
 
 EXPORT_FUNCTIONS=true
 
-[ -n "$SHELL_FOR" ] && [ $$ -eq "$SHELL_FOR" ] && exit  # Avoid recursive invocation
-SHELL_FOR=$$
+# Avoid recursive invocation
+[ -n "$BASHRC_DISPATCH_PID" ] && [ $$ -eq "$BASHRC_DISPATCH_PID" ] && exit
+BASHRC_DISPATCH_PID=$$
+
 
 SHELL_PLATFORM='OTHER'
 case "$MACHTYPE" in
@@ -56,3 +58,5 @@ unset fn_cmd
 [ -f "${HOME}/.bashrc_script" ]      && shell_is_script      && . "${HOME}/.bashrc_script"
 [ -f "${HOME}/.bashrc_interactive" ] && shell_is_interactive && . "${HOME}/.bashrc_interactive"
 [ -f "${HOME}/.bashrc_login" ]       && shell_is_login       && . "${HOME}/.bashrc_login"
+
+unset BASHRC_DISPATCH_PID
