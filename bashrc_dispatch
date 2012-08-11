@@ -45,29 +45,47 @@
 #
 #
 
+# Configuration
+# -------------
+
+# EXPORT_FUNCTIONS: export SHELL_PLATFORM and shell_is_* functions for use
+#                   in other scripts.
+
+EXPORT_FUNCTIONS=true
+
 [ -n "$SHELL_FOR" ] && [ $$ -eq "$SHELL_FOR" ] && exit  # Avoid recursive invocation
 SHELL_FOR=$$
 
-export SHELL_PLATFORM='OTHER'
+SHELL_PLATFORM='OTHER'
 case "$MACHTYPE" in
   *'linux'*   ) SHELL_PLATFORM='LINUX' ;;
   *'darwin'*  ) SHELL_PLATFORM='OSX' ;;
   *'freebsd'* ) SHELL_PLATFORM='BSD' ;;
 esac
 
-if [ -z "$SHELL_DISPATCH_FUNCTIONS" ] ; then
-  shell_is_linux       () { test "$SHELL_PLATFORM" = 'LINUX' ; }
-  shell_is_osx         () { test "$SHELL_PLATFORM" = 'OSX' ; }
+if ! type -p shell_is_login ; then
+  shell_is_linux       () { [[ "$MACHTYPE" == *'linux'* ]] ; }
+  shell_is_osx         () { [[ "$MACHTYPE" == *'darwin'* ]] ; }
   shell_is_login       () { shopt -q login_shell ; }
   shell_is_interactive () { test -n "$PS1" ; }
   shell_is_script      () { ! shell_is_interactive ; }
-  export -f shell_is_linux
-  export -f shell_is_osx
-  export -f shell_is_login
-  export -f shell_is_interactive
-  export -f shell_is_script
-  export SHELL_DISPATCH_FUNCTIONS=1
 fi
+
+if $EXPORT_FUNCTIONS ; then
+  fn_cmd='export'
+else
+  fn_cmd='unset'
+fi
+
+$fn_cmd SHELL_PLATFORM
+$fn_cmd -f shell_is_linux
+$fn_cmd -f shell_is_osx
+$fn_cmd -f shell_is_login
+$fn_cmd -f shell_is_interactive
+$fn_cmd -f shell_is_script
+
+unset EXPORT_FUNCTIONS
+unset fn_cmd
 
 [ -z "$BASH_ENV" ] && export BASH_ENV="$BASH_SOURCE"
 
