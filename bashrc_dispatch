@@ -1,73 +1,80 @@
 #!/bin/bash
+
+# Launch different bash configuration for Linux vs OSX, interactive vs batch
+#
+# More info at https://github.com/gioele/bashrc_dispatch
+#
 # License: Public Domain.
 # Author:  Joseph Wecker, 2012
-#
-# Symlink all of the following to this file:
-#   *  ~/.bashrc
-#   *  ~/.bash_profile
-#   *  ~/.profile
-#   *  ~/.bash_login
-#
-# And then you can use these instead:
-#   *  ~/.bashrc_all             sourced on every bash instantiation
-#   *    ~/.bashrc_script        sourced only when non-interactive
-#   *    ~/.bashrc_interactive   the one you'll probably fill up (MUTALLY EXCLUSIVE w/ .bashrc_script)
-#   *      ~/.bashrc_login       sourced only when an interactive is also a login
-#
-# To reiterate, `.bashrc_all` will always be run first.
-# Then either `.bashrc_script` OR `.bashrc_interactive` will be run next
-# depending on whether or not the bash invocation is... interactive.
-# Finally, sometimes, like when you first ssh into a machine or often when
-# opening a new terminal window on a mac, the `.bashrc_login` will be run
-# after the `.bash_interactive`. So `.bashrc_login` is the one where you'd echo
-# a banner or whatever.
-#
-#
-# In addition to the dispatching, you'll see below that you'll forever have the
-# following available:
-#  * $SHELL_PLATFORM   # (at the moment just 'LINUX', 'OSX', or 'OTHER')
-#  * shell_is_linux
-#  * shell_is_osx
-#  * shell_is_interactive
-#  * shell_is_script
-#
-# The functions are meant for clean conditionals in your new .bashrc_* scripts-
-# like:
-#     $  shell_is_linux && echo 'leenux!'
-# or something like:
-#     $  if shell_is_interactive; then echo 'interact'; fi
-# etc... And now I think these comments have reached parity with the code
-# itself which should be easy to extend.
-#
-#
 
-[ -n "$SHELL_FOR" ] && [ $$ -eq "$SHELL_FOR" ] && exit  # Avoid recursive invocation
-SHELL_FOR=$$
+# Configuration
+# -------------
+#
+# EXPORT_FUNCTIONS: export SHELL_PLATFORM and shell_is_* functions for use
+#                   in other scripts.
 
-export SHELL_PLATFORM='OTHER'
-unamestr=`uname`
-if   [[ "$unamestr" == 'Linux'  ]]; then SHELL_PLATFORM='LINUX';
-elif [[ "$unamestr" == 'Darwin' ]]; then SHELL_PLATFORM='OSX';
+EXPORT_FUNCTIONS=true
+
+
+# Code
+# ----
+
+# Avoid recursive invocation
+
+[ -n "$BASHRC_DISPATCH_PID" ] && [ $$ -eq "$BASHRC_DISPATCH_PID" ] && exit
+BASHRC_DISPATCH_PID=$$
+
+
+# Setup the main shell variables and functions
+
+SHELL_PLATFORM='OTHER'
+case "$OSTYPE" in
+  *'linux'*   ) SHELL_PLATFORM='LINUX' ;;
+  *'darwin'*  ) SHELL_PLATFORM='OSX' ;;
+  *'freebsd'* ) SHELL_PLATFORM='BSD' ;;
+esac
+
+if ! type -p shell_is_login ; then
+  shell_is_linux       () { [[ "$OSTYPE" == *'linux'* ]] ; }
+  shell_is_osx         () { [[ "$OSTYPE" == *'darwin'* ]] ; }
+  shell_is_login       () { shopt -q login_shell ; }
+  shell_is_interactive () { test -n "$PS1" ; }
+  shell_is_script      () { ! shell_is_interactive ; }
 fi
 
-if [ -z "$SHELL_DISPATCH_FUNCTIONS" ]; then
-  shell_is_linux       () { return `[[ "$SHELL_PLATFORM" == 'LINUX' ]]`; }
-  shell_is_osx         () { return `[[ "$SHELL_PLATFORM" == 'OSX'   ]]`; }
-  shell_is_login       () { return `shopt -q login_shell`;               }
-  shell_is_interactive () { return `[ -n "$PS1" ]`;                      }
-  shell_is_script      () { return `! shell_is_interactive`;             }
-  export -f shell_is_linux
-  export -f shell_is_osx
-  export -f shell_is_login
-  export -f shell_is_interactive
-  export -f shell_is_script
-  export SHELL_DISPATCH_FUNCTIONS=1
-fi
+
+# Make $BASH_ENV the same in interactive and non-interactive scripts
 
 [ -z "$BASH_ENV" ] && export BASH_ENV="$BASH_SOURCE"
 
+
 # Now dispatch special files
-[ -f "${HOME}/.bashrc_all" ]                                 && source "${HOME}/.bashrc_all"
-[ -f "${HOME}/.bashrc_script" ]      && shell_is_script      && source "${HOME}/.bashrc_script"
-[ -f "${HOME}/.bashrc_interactive" ] && shell_is_interactive && source "${HOME}/.bashrc_interactive"
-[ -f "${HOME}/.bashrc_login" ]       && shell_is_login       && source "${HOME}/.bashrc_login"
+
+[ -f "${HOME}/.bashrc_all" ]                                 && . "${HOME}/.bashrc_all"
+[ -f "${HOME}/.bashrc_script" ]      && shell_is_script      && . "${HOME}/.bashrc_script"
+[ -f "${HOME}/.bashrc_interactive" ] && shell_is_interactive && . "${HOME}/.bashrc_interactive"
+[ -f "${HOME}/.bashrc_login" ]       && shell_is_login       && . "${HOME}/.bashrc_login"
+
+
+# Export or unset functions and shell variables
+
+if $EXPORT_FUNCTIONS ; then
+  fn_cmd='export'
+else
+  fn_cmd='unset'
+fi
+
+$fn_cmd SHELL_PLATFORM
+$fn_cmd -f shell_is_linux
+$fn_cmd -f shell_is_osx
+$fn_cmd -f shell_is_login
+$fn_cmd -f shell_is_interactive
+$fn_cmd -f shell_is_script
+
+
+# Unset local variables
+
+unset fn_cmd
+
+unset EXPORT_FUNCTIONS
+unset BASHRC_DISPATCH_PID
