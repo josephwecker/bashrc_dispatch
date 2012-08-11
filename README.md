@@ -22,21 +22,25 @@ Symlink all of the following files to `bashrc_dispatch`:
 
 And then you can use these instead:
 
-*  `~/.bashrc_all`: sourced on every bash instantiation;
-*  `~/.bashrc_script`: sourced only when non-interactive;
-*  `~/.bashrc_interactive`: the one you'll probably fill up (*mutually
-   exclusive* with `~/.bashrc_script`);
+*  `~/.bashrc_once`: sourced at least once, and in most circumstances only once- before anything else.
+*  `~/.bashrc_all`: sourced on every bash instantiation
+*  `~/.bashrc_script`: sourced only when non-interactive / batch
+*  `~/.bashrc_interactive`: the one you'll probably fill up (*mutually exclusive* with `~/.bashrc_script`)
 *  `~/.bashrc_login`: sourced only when an interactive shell is also a login.
 
 To reiterate,
 
-1. `~/.bashrc_all` will always be run first.
+1. `~/.bashrc_once` will be run before any of the others, but then won't be run
+   again (ideally).
+2. `~/.bashrc_all` will run next, and will be run on _every_ bash invocation.
+   (so keep it light)
 2. Then either `~/.bashrc_script` *or* `~/.bashrc_interactive` will be run
    next depending on whether or not the bash invocation is interactive.
 3. Finally, sometimes, like when you first ssh into a machine or often when
    opening a new terminal window on a mac, the `~/.bashrc_login` will be run
    after the `~/.bash_interactive`. So `~/.bashrc_login` is the one where
-   you'd echo a banner or whatever.
+   you'd echo a banner or whatever. For things like setting the PATH, use
+   `.bashrc_once` instead.
 
 In addition to the dispatching, you'll forever have the following available:
 

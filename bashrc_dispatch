@@ -2,7 +2,7 @@
 
 # Launch different bash configuration for Linux vs OSX, interactive vs batch
 #
-# More info at https://github.com/gioele/bashrc_dispatch
+# More info at https://github.com/josephwecker/bashrc_dispatch
 #
 # License: Public Domain.
 # Author:  Joseph Wecker, 2012
@@ -14,7 +14,6 @@
 #                   in other scripts.
 
 EXPORT_FUNCTIONS=true
-
 
 # Code
 # ----
@@ -49,12 +48,13 @@ fi
 
 
 # Now dispatch special files
-PREFIX=${HOME}/.
+PRF="${HOME}/."
 
-[ -f "${PREFIX}bashrc_all" ]                                 && . "${PREFIX}bashrc_all"
-[ -f "${PREFIX}bashrc_script" ]      && shell_is_script      && . "${PREFIX}bashrc_script"
-[ -f "${PREFIX}bashrc_interactive" ] && shell_is_interactive && . "${PREFIX}bashrc_interactive"
-[ -f "${PREFIX}bashrc_login" ]       && shell_is_login       && . "${PREFIX}bashrc_login"
+[ -f "${PRF}bashrc_once"  ]       && [ -z "$BRCD_RANONCE" ] && . "${PRF}bashrc_once"  && export BRCD_RANONCE=true
+[ -f "${PRF}bashrc_all" ]                                   && . "${PRF}bashrc_all"
+[ -f "${PRF}bashrc_script" ]      && shell_is_script        && . "${PRF}bashrc_script"
+[ -f "${PRF}bashrc_interactive" ] && shell_is_interactive   && . "${PRF}bashrc_interactive"
+[ -f "${PRF}bashrc_login" ]       && shell_is_login         && . "${PRF}bashrc_login"
 
 
 # Export or unset functions and shell variables
@@ -76,6 +76,6 @@ $fn_cmd -f shell_is_script
 # Unset local variables
 
 unset fn_cmd
-
 unset EXPORT_FUNCTIONS
 unset BASHRC_DISPATCH_PID
+unset PRF
