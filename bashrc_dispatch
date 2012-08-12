@@ -26,12 +26,14 @@ BASHRC_DISPATCH_PID=$$
 
 # Setup the main shell variables and functions
 
-SHELL_PLATFORM='OTHER'
-case "$OSTYPE" in
-  *'linux'*   ) SHELL_PLATFORM='LINUX' ;;
-  *'darwin'*  ) SHELL_PLATFORM='OSX' ;;
-  *'freebsd'* ) SHELL_PLATFORM='BSD' ;;
-esac
+if [ -z "$SHELL_PLATFORM" ]; then
+    SHELL_PLATFORM='OTHER'
+    case "$OSTYPE" in
+      *'linux'*   ) SHELL_PLATFORM='LINUX' ;;
+      *'darwin'*  ) SHELL_PLATFORM='OSX' ;;
+      *'freebsd'* ) SHELL_PLATFORM='BSD' ;;
+    esac
+fi
 
 if ! type -p shell_is_login ; then
   shell_is_linux       () { [[ "$OSTYPE" == *'linux'* ]] ; }
