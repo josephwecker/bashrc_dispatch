@@ -17,7 +17,7 @@ Symlink all of the following files to `bashrc_dispatch`:
 
 *  `~/.bashrc`
 *  `~/.bash_profile`
-*  `~/.profile`
+*  `~/.profile`  (only if your scripts are all 'sh' compatible- otherwise get rid of it altogether)
 *  `~/.bash_login`
 
 And then you can use these instead:
