@@ -20,7 +20,7 @@ EXPORT_FUNCTIONS=true
 
 # Avoid recursive invocation
 
-[ -n "$BASHRC_DISPATCH_PID" ] && [ $$ -eq "$BASHRC_DISPATCH_PID" ] && exit
+[ -n "$BASHRC_DISPATCH_PID" ] && [ $$ -eq "$BASHRC_DISPATCH_PID" ] && return
 BASHRC_DISPATCH_PID=$$
 
 
