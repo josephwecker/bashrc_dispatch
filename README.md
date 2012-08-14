@@ -13,7 +13,12 @@ differently from Linux?
 
 Are you tired of not having your `~/.bash*` stuff work the way you expect?
 
-Symlink all of the following files to `bashrc_dispatch`:
+
+Setup / Usage
+--------------
+
+Symlink all of the following files to `bashrc_dispatch` (after reading warnings
+below):
 
 *  `~/.bashrc`
 *  `~/.bash_profile`
@@ -42,6 +47,10 @@ To reiterate,
    you'd echo a banner or whatever. For things like setting the PATH, use
    `.bashrc_once` instead.
 
+
+Exported Stuff
+--------------
+
 In addition to the dispatching, you'll forever have the following available:
 
 * `$SHELL_PLATFORM` (either `LINUX`, `OSX`, `BSD` or `OTHER`),
@@ -59,12 +68,25 @@ or something like:
 
     $  if shell_is_interactive ; then echo 'interact' ; fi
 
-And now I think these comments have reached parity with the code itself which
-should be easy to extend.
+Warnings
+---------
 
+* Obviously don't simply blow away your existing startup scripts if they have
+  anything in them- you'll need their content to populate the new `bashrc_*`
+  stuff.
 
-Configuration
--------------
+* If you symlink `~/.profile` to this script you may be fine, but since it
+  sometimes gets sourced by a true `sh` command and the script currently has
+  some bash-only stuff, it might not. Specifically, remove the symlink to
+  `~/.profile` if anything starts acting strange on startup or xwindows-based
+  login.
+
+* Be very careful what you put in `.bashrc_all` and `.bashrc_script` - it may
+  slow the system down. I put them there for conceptual completeness- that
+  doesn't mean you have to use them (:
+
+Additional Configuration
+-------------------------
 
 There are few knobs you can turn to make `bashrc_dispatch` behave as you prefer.
 
@@ -72,10 +94,17 @@ There are few knobs you can turn to make `bashrc_dispatch` behave as you prefer.
   `$SHELL_PLATFORM` and all the `shell_is_*` functions and avoid polluting all
    the other shells' environments.
 
+* Inside `bashrc_dispatch` you can change `PRF=` to a location other than
+  `${HOME}/.` to have it look for your new `bashrc_*` scripts somewhere else.
+
+* In general, modify your `bashrc_dispatch` script as much as you need to.
+  You'll see there's not a lot of code there. Much less code then there are
+  comments in this readme. Please share a patch if you like your modification.
+
 Authors
 -------
 
-* Joseph Wecker (initial author)
+* Joseph Wecker
 * Gioele Barabucci <http://svario.it/gioele> (fixes and optimizations)
 
 
