@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # Launch different bash configuration for Linux vs OSX, interactive vs batch
 #
