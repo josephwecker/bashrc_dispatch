@@ -32,12 +32,14 @@ if [ -z "$SHELL_PLATFORM" ]; then
       *'linux'*   ) SHELL_PLATFORM='LINUX' ;;
       *'darwin'*  ) SHELL_PLATFORM='OSX' ;;
       *'freebsd'* ) SHELL_PLATFORM='BSD' ;;
+      *'cygwin'*  ) SHELL_PLATFORM='CYGWIN' ;;
     esac
 fi
 
 if ! type -p shell_is_login ; then
   shell_is_linux       () { [[ "$OSTYPE" == *'linux'* ]] ; }
   shell_is_osx         () { [[ "$OSTYPE" == *'darwin'* ]] ; }
+  shell_is_cygwin      () { [[ "$OSTYPE" == *'cygwin'* ]] ; }
   shell_is_login       () { shopt -q login_shell ; }
   shell_is_interactive () { test -n "$PS1" ; }
   shell_is_script      () { ! shell_is_interactive ; }
@@ -55,6 +57,7 @@ if $EXPORT_FUNCTIONS ; then
     export SHELL_PLATFORM
     export -f shell_is_linux
     export -f shell_is_osx
+    export -f shell_is_cygwin
     export -f shell_is_login
     export -f shell_is_interactive
     export -f shell_is_script
@@ -76,6 +79,7 @@ if ! $EXPORT_FUNCTIONS ; then
     unset SHELL_PLATFORM
     unset -f shell_is_linux
     unset -f shell_is_osx
+    unset -f shell_is_cygwin
     unset -f shell_is_login
     unset -f shell_is_interactive
     unset -f shell_is_script
