@@ -41,7 +41,7 @@ if ! type -p shell_is_login ; then
   shell_is_osx         () { [[ "$OSTYPE" == *'darwin'* ]] ; }
   shell_is_cygwin      () { [[ "$OSTYPE" == *'cygwin'* ]] ; }
   shell_is_login       () { shopt -q login_shell ; }
-  shell_is_interactive () { test -n "$PS1" ; }
+  shell_is_interactive () { [[ "$-" == *'i'* ]] ; }
   shell_is_script      () { ! shell_is_interactive ; }
 fi
 
