@@ -14,6 +14,7 @@
 #                   in other scripts.
 
 EXPORT_FUNCTIONS=true
+PRF="${HOME}/."
 
 # Code
 # ----
@@ -64,7 +65,6 @@ if $EXPORT_FUNCTIONS ; then
 fi
 
 # Now dispatch special files
-PRF="${HOME}/."
 
 [ -f "${PRF}bashrc_once"  ]       && [ -z "$BRCD_RANONCE" ] && . "${PRF}bashrc_once"  && export BRCD_RANONCE=true
 [ -f "${PRF}bashrc_all" ]                                   && . "${PRF}bashrc_all"
