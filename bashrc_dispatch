@@ -65,6 +65,7 @@ if $EXPORT_FUNCTIONS ; then
 fi
 
 # Now dispatch special files
+
 [ -f "${PRF}bashrc_once"  ]       && [ -z "$BRCD_RANONCE" ] && . "${PRF}bashrc_once"  && export BRCD_RANONCE=true
 [ -f "${PRF}bashrc_all" ]                                   && . "${PRF}bashrc_all"
 [ -f "${PRF}bashrc_script" ]      && shell_is_script        && . "${PRF}bashrc_script"
